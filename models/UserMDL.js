@@ -1,6 +1,10 @@
-import { Schema } from "mongoose";
+import { model, Schema } from "mongoose";
 const UserSchema = new Schema(
   {
+    slug: {
+      type: String,
+      required: true,
+    },
     firstName: {
       type: String,
       required: true,

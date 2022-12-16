@@ -18,7 +18,7 @@ const PostSchema = new Schema(
       ref: "User",
       required: true,
     },
-    tags: [String],
+    tags: [Types.ObjectId],
   },
   {
     timestamps: true,
