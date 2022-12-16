@@ -18,7 +18,15 @@ const PostSchema = new Schema(
       ref: "User",
       required: true,
     },
-    tags: [Types.ObjectId],
+    image: {
+      type: [Types.ObjectId],
+      required: false,
+      ref: "image",
+    },
+    tags: {
+      type: [Types.ObjectId],
+      required: false,
+    },
   },
   {
     timestamps: true,
