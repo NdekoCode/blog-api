@@ -27,12 +27,73 @@ export async function fakeUser() {
   }
 }
 export async function fakePosts() {
-  const postsFile = await readFile(join(__filename, "fakeData", "posts.json"));
+  const tagsFake = [
+    [
+      "639e0f26f20c4f38cce948f2",
+      "639e0f26f20c4f38cce948f4",
+      "639e0f27f20c4f38cce948f8",
+    ],
+    [
+      "639e0f26f20c4f38cce948f2",
+      "639e0f26f20c4f38cce948f4",
+      "639e0f26f20c4f38cce948f6",
+    ],
+    [
+      "639e0f26f20c4f38cce948f4",
+      "639e0f26f20c4f38cce948f6",
+      "639e0f27f20c4f38cce948f8",
+    ],
+
+    [
+      "639e0f27f20c4f38cce948ff",
+      "639e0f26f20c4f38cce948f6",
+      "639e0f27f20c4f38cce948f8",
+    ],
+
+    [
+      "639e0f27f20c4f38cce948ff",
+      "639e0f27f20c4f38cce948f8",
+      "639e0f27f20c4f38cce94902",
+    ],
+
+    [
+      "639e0f27f20c4f38cce948f8",
+      "639e0f27f20c4f38cce948f8",
+      "639e0f27f20c4f38cce948fa",
+    ],
+
+    [
+      "639e0f27f20c4f38cce948ff",
+      "639e0f27f20c4f38cce948fd",
+      "639e0f27f20c4f38cce948f8",
+    ],
+
+    [
+      "639e0f26f20c4f38cce948f4",
+      "639e0f27f20c4f38cce948fa",
+      "639e0f27f20c4f38cce94904",
+    ],
+    ["639e0f26f20c4f38cce948f4", "639e0f27f20c4f38cce948f8"],
+    ["639e0f27f20c4f38cce948f8", "639e0f26f20c4f38cce948f6"],
+  ];
+  const postsFile = await readFile(
+    join(__filename, "fakeDataJSON", "posts.json")
+  );
   const postData = JSON.parse(postsFile);
-  const users = UserMDL.find();
-  for (let post of postData) {
-    const postItem = {};
-    const post = new PostMDL(post);
+  const users = await UserMDL.find({});
+  for (let item of postData) {
+    const randomItem = parseInt(Math.random() * users.length);
+    console.log(users[randomItem]._id);
+    const postData = {
+      slug: slugify(item.title.toLowerCase()),
+      title: item.title,
+      body: item.body,
+      userId: users[randomItem]._id,
+      tags: tagsFake[parseInt(Math.random() * tagsFake.length)],
+    };
+    const post = new PostMDL(postData);
+    await post.save();
+    console.log(`Article ${post.title} ajouter`);
   }
 }
 export async function fakeTags() {

@@ -1,5 +1,5 @@
 import { connect, set } from "mongoose";
-// import { fakeTags } from "../utils/fakeData.js";
+// import { fakePosts } from "../utils/fakeData.js";
 const dbUrl = process.env.DB_URI;
 export default async function connectDD() {
   try {
@@ -9,7 +9,7 @@ export default async function connectDD() {
       useUnifiedTopology: true,
     });
     console.log("Database connected");
-    // fakeTags();
+    // fakePosts();
   } catch (error) {
     console.log("failed to connected to the database ", error.message);
   }
