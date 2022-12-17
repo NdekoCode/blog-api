@@ -28,5 +28,5 @@ const ImageSchema = new Schema(
     timestamps: true,
   }
 );
-const ImageMDL = new model("image", ImageSchema);
+const ImageMDL = new model("Image", ImageSchema);
 export default ImageMDL;
