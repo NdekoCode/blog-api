@@ -2,7 +2,9 @@ import { hash } from "bcrypt";
 import slugify from "slugify";
 import UserMDL from "../models/UserMDL.js";
 import Alert from "../utils/Alert.js";
+import { consoleError } from "../utils/utils.js";
 import Validator from "../utils/Validator.js";
+import { varIsEmpty } from "../utils/validators.js";
 
 export default class UsersCTRL {
   async getUsers(req, res) {
@@ -104,7 +106,7 @@ export default class UsersCTRL {
     const validator = new Validator();
     const _id = req.params.id;
     const alert = new Alert(req, res);
-    const bodyRequest = { ...body };
+    const bodyRequest = { ...req.body };
     validator.validateFormBody(bodyRequest);
     if (!validator.varIsEmpty(validator.errors)) {
       return alert.danger("Veuiller entrer tous les change", 400);
@@ -112,12 +114,22 @@ export default class UsersCTRL {
     try {
       const testUser = await UserMDL.exists({ _id });
       if (testUser) {
-        const user = UserMDL.updateOne({ _id }, bodyRequest);
+        console.log(bodyRequest);
+        if (
+          !varIsEmpty(bodyRequest.lastName) ||
+          !varIsEmpty(bodyRequest.firstName)
+        ) {
+          bodyRequest.slug = slugify(
+            `${bodyRequest.firstName} ${bodyRequest.lastName}`.toLowerCase()
+          );
+        }
+        await UserMDL.updateOne({ _id }, bodyRequest);
         return alert.success("Utilisateur modifier avec succés", 201);
       }
 
       return alert.danger("L'utilisateur n'existe pas", 404);
     } catch (error) {
+      consoleError(error);
       return alert.danger(error.messsage, 500);
     }
   }

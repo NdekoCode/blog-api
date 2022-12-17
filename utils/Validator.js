@@ -32,7 +32,7 @@ export default class Validator {
   }
   varIsEmpty(value) {
     return this.isEmpty(value) || typeof "object"
-      ? Object.keys(value).length < 1 || JSON.stringify(value) === "{}"
+      ? JSON.stringify(value) === "{}"
       : value.length < 1;
   }
   validateRequiredFields(data, fields) {

@@ -27,7 +27,7 @@ export function validatePassword(password, confpassword) {
 }
 export function varIsEmpty(value) {
   return isEmpty(value) || typeof "object"
-    ? Object.keys(value).length < 1 || JSON.stringify(value) === "{}"
+    ? JSON.stringify(value) === "{}"
     : value.length < 1;
 }
 export function validateRequiredFields(data, fields) {
