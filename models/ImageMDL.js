@@ -7,6 +7,7 @@ const ImageSchema = new Schema(
     },
     url: {
       type: String,
+      required: false,
     },
     userId: {
       type: Types.ObjectId,

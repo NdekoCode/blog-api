@@ -32,5 +32,11 @@ const PostSchema = new Schema(
     timestamps: true,
   }
 );
+class Post {
+  static findBySlug(slug) {
+    return this.findOne({ slug });
+  }
+}
+PostSchema.loadClass(Post);
 const PostMDL = new model("post", PostSchema);
 export default PostMDL;

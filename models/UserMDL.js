@@ -31,6 +31,10 @@ const UserSchema = new Schema(
       type: String,
       required: false,
     },
+    password: {
+      type: String,
+      required: true,
+    },
     image: {
       type: String,
       required: false,
@@ -38,7 +42,6 @@ const UserSchema = new Schema(
   },
   { timestamps: true }
 );
-const UserMDL = new model("user", UserSchema);
 class User {
   getProfileUrl() {
     return "";
@@ -49,4 +52,6 @@ class User {
 }
 UserSchema.indexes();
 UserSchema.loadClass(User);
+const UserMDL = new model("user", UserSchema);
+
 export default UserMDL;
