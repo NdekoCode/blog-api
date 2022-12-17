@@ -11,8 +11,19 @@ export async function fakeUser() {
     encoding: "utf-8",
   });
   const userFileData = JSON.parse(userFile);
+  const password = await hash("7288ndeko", 12);
+  const firstUser = {
+    slug: slugify("Arick Bulakali".toLocaleLowerCase()),
+    firstName: "Arick",
+    lastName: "Bulakali",
+    email: "arickbulakali@gmail.com",
+    username: "ndekocode",
+    password,
+  };
+
+  const user = new UserMDL(firstUser);
+  await user.save();
   for (const item of userFileData) {
-    const password = await hash("7288ndeko", 12);
     const userData = {
       slug: slugify(`${item.firstName} ${item.lastName}`.toLocaleLowerCase()),
       firstName: item.firstName,
@@ -29,55 +40,58 @@ export async function fakeUser() {
 export async function fakePosts() {
   const tagsFake = [
     [
-      "639e0f26f20c4f38cce948f2",
-      "639e0f26f20c4f38cce948f4",
-      "639e0f27f20c4f38cce948f8",
+      "639e218e67ad689103ee3015",
+      "639e218e67ad689103ee3017",
+      "639e218e67ad689103ee301d",
     ],
     [
-      "639e0f26f20c4f38cce948f2",
-      "639e0f26f20c4f38cce948f4",
-      "639e0f26f20c4f38cce948f6",
+      "639e218e67ad689103ee301b",
+      "639e218e67ad689103ee3015",
+      "639e218e67ad689103ee3017",
     ],
     [
-      "639e0f26f20c4f38cce948f4",
-      "639e0f26f20c4f38cce948f6",
-      "639e0f27f20c4f38cce948f8",
-    ],
-
-    [
-      "639e0f27f20c4f38cce948ff",
-      "639e0f26f20c4f38cce948f6",
-      "639e0f27f20c4f38cce948f8",
+      "639e218e67ad689103ee3017",
+      "639e218e67ad689103ee301b",
+      "639e218e67ad689103ee301d",
     ],
 
     [
-      "639e0f27f20c4f38cce948ff",
-      "639e0f27f20c4f38cce948f8",
-      "639e0f27f20c4f38cce94902",
+      "639e218e67ad689103ee301f",
+      "639e218e67ad689103ee301b",
+      "639e218e67ad689103ee301d",
     ],
 
     [
-      "639e0f27f20c4f38cce948f8",
-      "639e0f27f20c4f38cce948f8",
-      "639e0f27f20c4f38cce948fa",
+      "639e218e67ad689103ee301f",
+      "639e218e67ad689103ee301d",
+      "639e218f67ad689103ee3022",
     ],
 
     [
-      "639e0f27f20c4f38cce948ff",
+      "639e218e67ad689103ee301d",
+      "639e218f67ad689103ee3022",
+      "639e218f67ad689103ee3025",
+    ],
+
+    [
+      "639e218e67ad689103ee301f",
       "639e0f27f20c4f38cce948fd",
-      "639e0f27f20c4f38cce948f8",
+      "639e218e67ad689103ee301d",
     ],
 
     [
-      "639e0f26f20c4f38cce948f4",
-      "639e0f27f20c4f38cce948fa",
-      "639e0f27f20c4f38cce94904",
+      "639e218e67ad689103ee3017",
+      "639e218f67ad689103ee3025",
+      "639e218f67ad689103ee3027",
     ],
-    ["639e0f26f20c4f38cce948f4", "639e0f27f20c4f38cce948f8"],
-    ["639e0f27f20c4f38cce948f8", "639e0f26f20c4f38cce948f6"],
+    ["639e218e67ad689103ee3017", "639e218f67ad689103ee3027"],
+    ["639e218e67ad689103ee301d", "639e218f67ad689103ee3027"],
   ];
   const postsFile = await readFile(
-    join(__filename, "fakeDataJSON", "posts.json")
+    join(__filename, "fakeDataJSON", "posts.json"),
+    {
+      encoding: "utf-8",
+    }
   );
   const postData = JSON.parse(postsFile);
   const users = await UserMDL.find({});
@@ -88,7 +102,7 @@ export async function fakePosts() {
       slug: slugify(item.title.toLowerCase()),
       title: item.title,
       body: item.body,
-      userId: users[randomItem]._id,
+      author: users[randomItem]._id,
       tags: tagsFake[parseInt(Math.random() * tagsFake.length)],
     };
     const post = new PostMDL(postData);
@@ -98,7 +112,10 @@ export async function fakePosts() {
 }
 export async function fakeTags() {
   const singleFile = await readFile(
-    join(__filename, "fakeDataJSON", "tags.json")
+    join(__filename, "fakeDataJSON", "tags.json"),
+    {
+      encoding: "utf-8",
+    }
   );
   const singleTags = JSON.parse(singleFile);
   for (let item of singleTags) {

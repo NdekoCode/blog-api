@@ -1,4 +1,4 @@
-import { model, Schema } from "mongoose";
+import { model, Schema, Types } from "mongoose";
 const UserSchema = new Schema(
   {
     slug: {
@@ -41,6 +41,13 @@ const UserSchema = new Schema(
       type: String,
       required: false,
     },
+    posts: [
+      {
+        type: Types.ObjectId,
+        required: false,
+        ref: "Post",
+      },
+    ],
   },
   { timestamps: true }
 );
@@ -54,6 +61,6 @@ class User {
 }
 UserSchema.indexes();
 UserSchema.loadClass(User);
-const UserMDL = new model("user", UserSchema);
+const UserMDL = new model("User", UserSchema);
 
 export default UserMDL;

@@ -13,20 +13,25 @@ const PostSchema = new Schema(
       type: String,
       required: true,
     },
-    userId: {
+    author: {
       type: Types.ObjectId,
       ref: "User",
       required: true,
     },
-    image: {
-      type: [Types.ObjectId],
-      required: false,
-      ref: "image",
-    },
-    tags: {
-      type: [Types.ObjectId],
-      required: false,
-    },
+    image: [
+      {
+        type: Types.ObjectId,
+        required: false,
+        ref: "image",
+      },
+    ],
+    tags: [
+      {
+        type: Types.ObjectId,
+        ref: "Tag",
+        required: false,
+      },
+    ],
   },
   {
     timestamps: true,
@@ -38,5 +43,5 @@ class Post {
   }
 }
 PostSchema.loadClass(Post);
-const PostMDL = new model("post", PostSchema);
+const PostMDL = new model("Post", PostSchema);
 export default PostMDL;
