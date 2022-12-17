@@ -25,9 +25,14 @@ export default class Alert {
   info(message, statusCode = 100, type = "info") {
     return this.makeAlert(statusCode, message, type);
   }
-  makeAlert(statusCode, message, type = "danger") {
-    return this.res
-      .status(statusCode)
-      .json({ alert: { statusCode, message, type }, ...this.therData });
+  makeAlert(statusCode, message = "", type = "danger") {
+    return this.res.status(statusCode).json({
+      alert: {
+        statusCode,
+        message,
+        type,
+      },
+      ...this.otherData,
+    });
   }
 }

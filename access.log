@@ -11,3 +11,4 @@
 ::ffff:127.0.0.1 - - [17/Dec/2022:09:47:21 +0000] "GET /api/v1/auth/users HTTP/1.1" 404 156
 ::ffff:127.0.0.1 - - [17/Dec/2022:09:55:26 +0000] "GET /api/v1/auth/users HTTP/1.1" 404 156
 ::ffff:127.0.0.1 - - [17/Dec/2022:09:55:45 +0000] "GET /api/v1/auth/users HTTP/1.1" 404 156
+::ffff:127.0.0.1 - - [17/Dec/2022:13:20:22 +0000] "GET /api/v1/auth/users/delete/639dc0a9838708774a29b560 HTTP/1.1" 404 188

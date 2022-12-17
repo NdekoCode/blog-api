@@ -4,6 +4,8 @@ const UserSchema = new Schema(
     slug: {
       type: String,
       required: true,
+      unique: true,
+      index: true,
     },
     firstName: {
       type: String,

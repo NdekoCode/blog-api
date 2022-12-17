@@ -4,5 +4,7 @@ const usersRoutes = Router();
 const users = new UsersCTRL();
 usersRoutes.get("/users", users.getUsers);
 usersRoutes.get("/users/:id", users.getUser);
-usersRoutes.put("users/update/:id", users.updateUser);
+usersRoutes.post("/users/add", users.signin);
+usersRoutes.put("/users/update/:id", users.updateUser);
+usersRoutes.delete("/users/delete/:id", users.deleteUser);
 export default usersRoutes;

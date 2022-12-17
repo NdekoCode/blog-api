@@ -11,7 +11,7 @@ export async function fakeUser() {
   for (const item of userFileData) {
     const password = await hash("7288ndeko", 12);
     const userData = {
-      slug: slugify(`${item.firstName} ${item.lastName}`),
+      slug: slugify(`${item.firstName} ${item.lastName}`.toLocaleLowerCase()),
       firstName: item.firstName,
       lastName: item.lastName,
       email: item.email,
