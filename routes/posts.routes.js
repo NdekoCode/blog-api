@@ -3,4 +3,5 @@ import PostsCTRL from "../controllers/PostsCTRL.js";
 const postsRouter = Router();
 const posts = new PostsCTRL();
 postsRouter.get("/", posts.getPosts);
+postsRouter.get("/:id", posts.getPost);
 export default postsRouter;
