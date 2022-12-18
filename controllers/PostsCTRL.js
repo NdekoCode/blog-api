@@ -53,15 +53,17 @@ export default class PostsCTRL {
   async addPost(req, res) {
     const validate = new Validator();
     const fieldRequired = ["title", "body"];
-    const bodyRequest = { ...req.body };
     const alert = new Alert(req, res);
+    const bodyRequest = { ...req.body };
     validate
       .validateFormBody(bodyRequest)
       .validateRequiredFields(bodyRequest, fieldRequired);
     try {
       if (validate.varIsEmpty(validate.errors)) {
         bodyRequest.slug = slugify(bodyRequest.title.toLowerCase());
+        bodyRequest.author = req.user._id;
         const post = new PostMDL(bodyRequest);
+
         await post.save();
         return alert.success("Post ajouter avec succés", 201);
       }
@@ -69,5 +71,42 @@ export default class PostsCTRL {
     } catch (error) {
       alert.danger(error.message, 500);
     }
+  }
+  async updatePost(req, res) {
+    const _id = req.params.id;
+    const bodyRequest = { ...req.body };
+    const validate = new Validator();
+    const alert = new Alert(req, res);
+    if (!validate.varIsEmpty(bodyRequest)) {
+      validate.validateFormBody(bodyRequest);
+      try {
+        console.log(validate.errors, bodyRequest);
+        if (validate.varIsEmpty(validate.errors)) {
+          const testPost = await PostMDL.findById(_id);
+          if (!validate.isEmpty(testPost)) {
+            if (!validate.isEmpty(bodyRequest.title)) {
+              bodyRequest.slug = slugify(bodyRequest.title.toLowerCase());
+            }
+            if (testPost.author.toString() === req.user._id.toString()) {
+              await PostMDL.updateOne({ _id }, bodyRequest);
+              return alert.success("Article modifier avec succés", 202);
+            }
+
+            return alert.danger(
+              "Modifier un article dont vous etes le proprietaire",
+              403
+            );
+          }
+
+          return alert.danger("L'article n'existe pas", 403);
+        }
+
+        return alert.danger(validator.errors["error"], 400);
+      } catch (error) {
+        return alert.danger(error.message, 500);
+      }
+    }
+
+    return alert.danger("Veuillez completer tous les champs", 403);
   }
 }

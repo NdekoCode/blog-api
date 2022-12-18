@@ -5,4 +5,5 @@ const posts = new PostsCTRL();
 postsRouter.get("/", posts.getPosts);
 postsRouter.get("/:id", posts.getPost);
 postsRouter.post("/add", posts.addPost);
+postsRouter.put("/update/:id", posts.updatePost);
 export default postsRouter;
