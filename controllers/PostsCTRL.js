@@ -3,7 +3,7 @@ import PostMDL from "../models/PostMDL.js";
 import TagMDL from "../models/TagMDL.js";
 import Alert from "../utils/Alert.js";
 import Validator from "../utils/Validator.js";
-import { isEmpty } from "../utils/validators.js";
+import { isEmpty, varIsEmpty } from "../utils/validators.js";
 
 export default class PostsCTRL {
   async getPosts(req, res) {
@@ -108,5 +108,26 @@ export default class PostsCTRL {
     }
 
     return alert.danger("Veuillez completer tous les champs", 403);
+  }
+  async deletePost(req, res) {
+    const _id = req.params.id;
+    const alert = new Alert(req, res);
+    try {
+      const post = await PostMDL.findById(_id);
+      if (!varIsEmpty(post)) {
+        console.log(post.author.toString(), req.user._id.toString());
+        if (post.author.toString() === req.user._id.toString()) {
+          await PostMDL.deleteOne({ _id });
+          return alert.success("Article supprimer avec succés", 202);
+        }
+
+        return alert.danger(
+          "Supprimer un article dont vous etes propriétaire modifié",
+          403
+        );
+      }
+    } catch (error) {
+      return alert.danger(error.message, 500);
+    }
   }
 }

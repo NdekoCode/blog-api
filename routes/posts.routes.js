@@ -6,4 +6,5 @@ postsRouter.get("/", posts.getPosts);
 postsRouter.get("/:id", posts.getPost);
 postsRouter.post("/add", posts.addPost);
 postsRouter.put("/update/:id", posts.updatePost);
+postsRouter.delete("/delete/:id", posts.deletePost);
 export default postsRouter;
