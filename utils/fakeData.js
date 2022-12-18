@@ -38,55 +38,6 @@ export async function fakeUser() {
   }
 }
 export async function fakePosts() {
-  const tagsFake = [
-    [
-      "639e218e67ad689103ee3015",
-      "639e218e67ad689103ee3017",
-      "639e218e67ad689103ee301d",
-    ],
-    [
-      "639e218e67ad689103ee301b",
-      "639e218e67ad689103ee3015",
-      "639e218e67ad689103ee3017",
-    ],
-    [
-      "639e218e67ad689103ee3017",
-      "639e218e67ad689103ee301b",
-      "639e218e67ad689103ee301d",
-    ],
-
-    [
-      "639e218e67ad689103ee301f",
-      "639e218e67ad689103ee301b",
-      "639e218e67ad689103ee301d",
-    ],
-
-    [
-      "639e218e67ad689103ee301f",
-      "639e218e67ad689103ee301d",
-      "639e218f67ad689103ee3022",
-    ],
-
-    [
-      "639e218e67ad689103ee301d",
-      "639e218f67ad689103ee3022",
-      "639e218f67ad689103ee3025",
-    ],
-
-    [
-      "639e218e67ad689103ee301f",
-      "639e0f27f20c4f38cce948fd",
-      "639e218e67ad689103ee301d",
-    ],
-
-    [
-      "639e218e67ad689103ee3017",
-      "639e218f67ad689103ee3025",
-      "639e218f67ad689103ee3027",
-    ],
-    ["639e218e67ad689103ee3017", "639e218f67ad689103ee3027"],
-    ["639e218e67ad689103ee301d", "639e218f67ad689103ee3027"],
-  ];
   const postsFile = await readFile(
     join(__filename, "fakeDataJSON", "posts.json"),
     {
@@ -95,15 +46,21 @@ export async function fakePosts() {
   );
   const postData = JSON.parse(postsFile);
   const users = await UserMDL.find({});
+  const tags = await TagMDL.find({});
   for (let item of postData) {
     const randomItem = parseInt(Math.random() * users.length);
-    console.log(users[randomItem]._id);
     const postData = {
       slug: slugify(item.title.toLowerCase()),
       title: item.title,
       body: item.body,
       author: users[randomItem]._id,
-      tags: tagsFake[parseInt(Math.random() * tagsFake.length)],
+      tags: [
+        ...new Set([
+          tags[parseInt(Math.random() * tags.length)]._id.toString(),
+          tags[parseInt(Math.random() * tags.length)]._id.toString(),
+          tags[parseInt(Math.random() * tags.length)]._id.toString(),
+        ]),
+      ],
     };
     const post = new PostMDL(postData);
     await post.save();

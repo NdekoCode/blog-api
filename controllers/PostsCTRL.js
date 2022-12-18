@@ -1,4 +1,5 @@
 import PostMDL from "../models/PostMDL.js";
+import TagMDL from "../models/TagMDL.js";
 import Alert from "../utils/Alert.js";
 import { isEmpty } from "../utils/validators.js";
 
@@ -12,7 +13,13 @@ export default class PostsCTRL {
         "username",
         "image",
       ]); */
-      const posts = await PostMDL.find().populate("author");
+      const posts = await PostMDL.find().populate([
+        "author",
+        {
+          path: "tags",
+          model: TagMDL,
+        },
+      ]);
       if (!isEmpty(posts)) {
         return res.json({ posts });
       }
