@@ -1,4 +1,4 @@
-import { model, Schema, Types } from "mongoose";
+import { model, Schema } from "mongoose";
 const TagSchema = new Schema(
   {
     slug: {
@@ -13,13 +13,6 @@ const TagSchema = new Schema(
       type: String,
       required: false,
     },
-    posts: [
-      {
-        type: Types.ObjectId,
-        ref: "Post",
-        required: false,
-      },
-    ],
   },
   {
     timestamps: true,

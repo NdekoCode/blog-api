@@ -10,7 +10,10 @@ export default class Validator {
   }
   validateFormBody(data) {
     for (let item in data) {
-      if (this.isEmpty(data[item])) {
+      if (
+        this.isEmpty(data[item]) ||
+        (typeof data[item] === "string" && data[item].trim().length < 2)
+      ) {
         this.errors["error"] = `${item} est requis`;
         break;
       }
