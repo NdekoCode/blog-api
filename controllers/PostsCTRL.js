@@ -1,3 +1,4 @@
+import slugify from "slugify";
 import PostMDL from "../models/PostMDL.js";
 import TagMDL from "../models/TagMDL.js";
 import Alert from "../utils/Alert.js";
@@ -47,6 +48,26 @@ export default class PostsCTRL {
     } catch (error) {
       const alert = new Alert(req, res);
       return alert.danger(error.message, 500);
+    }
+  }
+  async addPost(req, res) {
+    const validate = new Validator();
+    const fieldRequired = ["title", "body"];
+    const bodyRequest = { ...req.body };
+    const alert = new Alert(req, res);
+    validate
+      .validateFormBody(bodyRequest)
+      .validateRequiredFields(bodyRequest, fieldRequired);
+    try {
+      if (validate.varIsEmpty(validate.errors)) {
+        bodyRequest.slug = slugify(bodyRequest.title.toLowerCase());
+        const post = new PostMDL(bodyRequest);
+        await post.save();
+        return alert.success("Post ajouter avec succés", 201);
+      }
+      alert.danger(validate.errors["error"], 400);
+    } catch (error) {
+      alert.danger(error.message, 500);
     }
   }
 }
