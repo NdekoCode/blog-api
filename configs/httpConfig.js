@@ -51,11 +51,7 @@ export function httpServerConfig(app) {
   }
   server.on("error", handleError);
   server.on("listening", serverListening);
-  server.listen(PORT, (req, res, next) => {
-    if (NODE_ENV !== "test") {
-      next();
-    }
-  });
+  server.listen(PORT);
 }
 export function normalisePort(port = process.env.PORT || 3500) {
   port = parseInt(port);
