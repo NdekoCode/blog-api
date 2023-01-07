@@ -1,4 +1,4 @@
-import { hash } from "bcrypt";
+import { compare, hash } from "bcrypt";
 import slugify from "slugify";
 import UserMDL from "../models/UserMDL.js";
 import Alert from "../utils/Alert.js";
@@ -7,9 +7,6 @@ import Validator from "../utils/Validator.js";
 import { varIsEmpty } from "../utils/validators.js";
 
 export default class UsersCTRL {
-  async login(req, res) {
-    const alert = new Alert(res, res);
-  }
   async getUsers(req, res) {
     const validator = new Validator();
     try {
@@ -83,6 +80,36 @@ export default class UsersCTRL {
       return alert.danger(error.messsage, 500);
     }
   }
+  /**
+   * @description Nous permet de verifier si un utilisateur existe dans notre base de donnée et si le mot de passe transmis par le client correspond à cet utilisateur
+   * @author NdekoCode
+   * @param {*} req
+   * @param {*} res
+   * @memberof UsersCTRL
+   */
+  async login(req, res) {
+    const alert = new Alert(res, res);
+    const validator = new Validator();
+    try {
+      const user = await UserMDL.findOne({ email: req.body.email });
+      if (!validator.varIsEmpty(user)) {
+        const valid = await compare(req.body.password, user.passwrod);
+        if (valid) {
+          const userData = {
+            userId: user._id,
+            email: user.email,
+            token: "TOKEN",
+          };
+          alert.setOtherData({ userData });
+          return alert.success("Vous etes bien connecté");
+        }
+        return alert.danger("Email ou mot de passe invalide", 401);
+      }
+      return alert.danger("Email ou mot de passe invalide", 401);
+    } catch (error) {
+      return alert.danger(error.message, 500);
+    }
+  }
   static async addUser(alert, bodyRequest, update = {}) {
     const validator = new Validator();
     try {
@@ -100,7 +127,7 @@ export default class UsersCTRL {
       );
       const user = new UserMDL(bodyRequest);
       await user.save();
-      return alert.success("Utilisateur ajouter avec succées", 201);
+      return alert.success("Utilisateur créer avec succées !", 201);
     } catch (error) {
       console.log(error);
       return alert.danger(error.message, 500);
