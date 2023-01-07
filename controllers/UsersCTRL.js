@@ -7,6 +7,9 @@ import Validator from "../utils/Validator.js";
 import { varIsEmpty } from "../utils/validators.js";
 
 export default class UsersCTRL {
+  async login(req, res) {
+    const alert = new Alert(res, res);
+  }
   async getUsers(req, res) {
     const validator = new Validator();
     try {
