@@ -5,7 +5,8 @@
   "type": "module",
   "main": "server.js",
   "scripts": {
-    "start": "NODE_ENV=development nodemon server.js lol"
+    "start": "NODE_ENV=development nodemon server.js",
+    "test": "NODE_ENV=test jest"
   },
   "keywords": [
     "node.js",
@@ -22,5 +23,9 @@
     "morgan": "^1.10.0",
     "multer": "1.4.5-lts.1",
     "slugify": "^1.6.5"
+  },
+  "devDependencies": {
+    "jest": "^29.3.1",
+    "supertest": "^6.3.3"
   }
 }

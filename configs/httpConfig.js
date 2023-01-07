@@ -4,6 +4,7 @@ import { consoleError } from "../utils/utils.js";
 import TerminalStream from "./TerminalStream.js";
 export function httpServerConfig(app) {
   const PORT = process.env.PORT || 3500;
+  const NODE_ENV = process.env.NODE_ENV;
   const terminal = new TerminalStream();
   app.use(
     morgan("dev", {
@@ -50,7 +51,11 @@ export function httpServerConfig(app) {
   }
   server.on("error", handleError);
   server.on("listening", serverListening);
-  server.listen(PORT);
+  server.listen(PORT, (req, res, next) => {
+    if (NODE_ENV !== "test") {
+      next();
+    }
+  });
 }
 export function normalisePort(port = process.env.PORT || 3500) {
   port = parseInt(port);

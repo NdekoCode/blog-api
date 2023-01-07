@@ -28,7 +28,6 @@ export default class PostsCTRL {
 
       return res.json({ posts: [] });
     } catch (error) {
-      console.log(error);
       const alert = new Alert(req, res);
       return alert.danger(error.message, 500);
     }
@@ -80,7 +79,6 @@ export default class PostsCTRL {
     if (!validate.varIsEmpty(bodyRequest)) {
       validate.validateFormBody(bodyRequest);
       try {
-        console.log(validate.errors, bodyRequest);
         if (validate.varIsEmpty(validate.errors)) {
           const testPost = await PostMDL.findById(_id);
           if (!validate.isEmpty(testPost)) {
@@ -115,7 +113,6 @@ export default class PostsCTRL {
     try {
       const post = await PostMDL.findById(_id);
       if (!varIsEmpty(post)) {
-        console.log(post.author.toString(), req.user._id.toString());
         if (post.author.toString() === req.user._id.toString()) {
           await PostMDL.deleteOne({ _id });
           return alert.success("Article supprimer avec succés", 202);

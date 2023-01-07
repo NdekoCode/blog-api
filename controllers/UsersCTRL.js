@@ -65,14 +65,15 @@ export default class UsersCTRL {
       .validateFormBody(bodyRequest)
       .validatePassword(bodyRequest.password, bodyRequest.confpassword);
     try {
-      const testUser = await UserMDL.exists({ email: bodyRequest.email });
-      if (testUser) {
-        validator.errors["error"] = "L'utitlisateur existe déjà";
-        return alert.danger(validator.errors["error"], 409);
-      }
       if (validator.varIsEmpty(validator.errors)) {
+        const testUser = await UserMDL.exists({ email: bodyRequest.email });
+        if (testUser) {
+          validator.errors["error"] = "L'utitlisateur existe déjà";
+          return alert.danger(validator.errors["error"], 409);
+        }
         return await UsersCTRL.addUser(alert, bodyRequest);
       }
+
       console.log(validator.errors);
       return alert.danger(validator.errors["error"], 400);
     } catch (error) {
