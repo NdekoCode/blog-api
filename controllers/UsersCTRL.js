@@ -1,4 +1,5 @@
 import { compare, hash } from "bcrypt";
+import jwt from "jsonwebtoken";
 import slugify from "slugify";
 import UserMDL from "../models/UserMDL.js";
 import Alert from "../utils/Alert.js";
@@ -93,12 +94,16 @@ export default class UsersCTRL {
     try {
       const user = await UserMDL.findOne({ email: req.body.email });
       if (!validator.varIsEmpty(user)) {
-        const valid = await compare(req.body.password, user.passwrod);
+        const valid = await compare(req.body.password, user.password);
         if (valid) {
           const userData = {
             userId: user._id,
             email: user.email,
-            token: "TOKEN",
+            token: jwt.sign(
+              { userId: user._id, email: user.email },
+              process.env.SECRET_KEY || "RANDOM",
+              { expiresIn: "24h" }
+            ),
           };
           alert.setOtherData({ userData });
           return alert.success("Vous etes bien connecté");
@@ -107,6 +112,7 @@ export default class UsersCTRL {
       }
       return alert.danger("Email ou mot de passe invalide", 401);
     } catch (error) {
+      console.log(error);
       return alert.danger(error.message, 500);
     }
   }
