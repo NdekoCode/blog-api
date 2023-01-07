@@ -1,4 +1,5 @@
-import { hash } from "bcrypt";
+import { compare, hash } from "bcrypt";
+import jwt from "jsonwebtoken";
 import slugify from "slugify";
 import UserMDL from "../models/UserMDL.js";
 import Alert from "../utils/Alert.js";
@@ -65,18 +66,54 @@ export default class UsersCTRL {
       .validateFormBody(bodyRequest)
       .validatePassword(bodyRequest.password, bodyRequest.confpassword);
     try {
-      const testUser = await UserMDL.exists({ email: bodyRequest.email });
-      if (testUser) {
-        validator.errors["error"] = "L'utitlisateur existe déjà";
-        return alert.danger(validator.errors["error"], 409);
-      }
       if (validator.varIsEmpty(validator.errors)) {
+        const testUser = await UserMDL.exists({ email: bodyRequest.email });
+        if (testUser) {
+          validator.errors["error"] = "L'utitlisateur existe déjà";
+          return alert.danger(validator.errors["error"], 409);
+        }
         return await UsersCTRL.addUser(alert, bodyRequest);
       }
+
       console.log(validator.errors);
       return alert.danger(validator.errors["error"], 400);
     } catch (error) {
       return alert.danger(error.messsage, 500);
+    }
+  }
+  /**
+   * @description Nous permet de verifier si un utilisateur existe dans notre base de donnée et si le mot de passe transmis par le client correspond à cet utilisateur
+   * @author NdekoCode
+   * @param {*} req
+   * @param {*} res
+   * @memberof UsersCTRL
+   */
+  async login(req, res) {
+    const alert = new Alert(res, res);
+    const validator = new Validator();
+    try {
+      const user = await UserMDL.findOne({ email: req.body.email });
+      if (!validator.varIsEmpty(user)) {
+        const valid = await compare(req.body.password, user.password);
+        if (valid) {
+          const userData = {
+            userId: user._id,
+            email: user.email,
+            token: jwt.sign(
+              { userId: user._id, email: user.email },
+              process.env.SECRET_KEY || "RANDOM",
+              { expiresIn: "24h" }
+            ),
+          };
+          alert.setOtherData({ userData });
+          return alert.success("Vous etes bien connecté");
+        }
+        return alert.danger("Email ou mot de passe invalide", 401);
+      }
+      return alert.danger("Email ou mot de passe invalide", 401);
+    } catch (error) {
+      console.log(error);
+      return alert.danger(error.message, 500);
     }
   }
   static async addUser(alert, bodyRequest, update = {}) {
@@ -96,7 +133,7 @@ export default class UsersCTRL {
       );
       const user = new UserMDL(bodyRequest);
       await user.save();
-      return alert.success("Utilisateur ajouter avec succées", 201);
+      return alert.success("Utilisateur créer avec succées !", 201);
     } catch (error) {
       console.log(error);
       return alert.danger(error.message, 500);

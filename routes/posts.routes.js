@@ -1,10 +1,11 @@
 import { Router } from "express";
 import PostsCTRL from "../controllers/PostsCTRL.js";
+import { auth } from "../middlewares/auth.mid.js";
 const postsRouter = Router();
 const posts = new PostsCTRL();
 postsRouter.get("/", posts.getPosts);
 postsRouter.get("/:id", posts.getPost);
-postsRouter.post("/add", posts.addPost);
-postsRouter.put("/update/:id", posts.updatePost);
-postsRouter.delete("/delete/:id", posts.deletePost);
+postsRouter.post("/add", auth, posts.addPost);
+postsRouter.put("/update/:id", auth, posts.updatePost);
+postsRouter.delete("/delete/:id", auth, posts.deletePost);
 export default postsRouter;

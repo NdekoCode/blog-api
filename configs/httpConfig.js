@@ -4,6 +4,7 @@ import { consoleError } from "../utils/utils.js";
 import TerminalStream from "./TerminalStream.js";
 export function httpServerConfig(app) {
   const PORT = process.env.PORT || 3500;
+  const NODE_ENV = process.env.NODE_ENV;
   const terminal = new TerminalStream();
   app.use(
     morgan("dev", {
