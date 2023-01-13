@@ -11,10 +11,8 @@ export default class Alert {
     this.otherData = otherData;
   }
   danger(message, statusCode = 400, type = "danger") {
-    if (statusCode === 500) {
-      if (process.env.NODE_ENV !== "development") {
-        message = "Impossible d'afficher les information pour le moment";
-      }
+    if (statusCode === 500 && process.env.NODE_ENV !== "development") {
+      message = "Impossible d'afficher les information pour le moment";
     }
 
     return this.makeAlert(statusCode, message, type);

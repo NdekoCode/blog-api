@@ -16,3 +16,6 @@
 ::ffff:127.0.0.1 - - [17/Dec/2022:16:53:22 +0000] "GET /api/v1/auth/users/update/639df31399979ea92eb6a52f HTTP/1.1" 404 188
 ::ffff:127.0.0.1 - - [17/Dec/2022:16:53:51 +0000] "GET /api/v1/auth/users/update/639df31399979ea92eb6a52f HTTP/1.1" 404 188
 ::ffff:127.0.0.1 - - [17/Dec/2022:17:46:25 +0000] "GET /api/v1/auth/posts HTTP/1.1" 404 156
+::1 - - [13/Jan/2023:11:14:30 +0000] "GET /favicon.ico HTTP/1.1" 404 150
+::1 - - [13/Jan/2023:11:14:39 +0000] "GET /users HTTP/1.1" 404 144
+::ffff:127.0.0.1 - - [13/Jan/2023:11:33:55 +0000] "GET /api/v1/auth/user HTTP/1.1" 404 155

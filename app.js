@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import express from "express";
 import { resolve } from "path";
+import { errrorHandle } from "./middlewares/error.mid.js";
 import UserMDL from "./models/UserMDL.js";
 import postsRouter from "./routes/posts.routes.js";
 import usersRoutes from "./routes/users.routes.js";
@@ -29,6 +30,7 @@ app.use(async (req, res, next) => {
 app.get("/", (req, res) => {
   return res.send({ messages: ["God plan"] });
 });
+app.use(errrorHandle);
 
 app.use(baseUrl + "/auth", usersRoutes);
 app.use(baseUrl + "/posts", postsRouter);
